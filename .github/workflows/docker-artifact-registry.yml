@@ -1,0 +1,29 @@
+name: Build and Push to Artifact Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker us-east1-docker.pkg.dev
+
+      - name: Build and push Docker image
+        run: |
+          IMAGE=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/outreach:latest
+          docker build -t $IMAGE .
+          docker push $IMAGE
