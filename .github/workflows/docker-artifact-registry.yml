@@ -42,6 +42,9 @@ jobs:
             -backend-config="bucket=outreach-terraform-state" \
             -backend-config="prefix=cloud-run-demo"
 
+      - name: Show contents of gcp-key.json
+        run: cat /home/runner/work/ts-microservice-demo/ts-microservice-demo/gcp-key.json
+
       - name: Terraform Apply
         working-directory: infra/staging
         run: |
