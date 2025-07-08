@@ -33,7 +33,7 @@ jobs:
 
       - name: Write GCP credentials to file
         run: |
-          printf '%s' "${{ secrets.GCP_SA_KEY }}" > gcp-key.json
+          printf '%s' "${{ secrets.GCP_SA_KEY_B64 }}" | base64 -d > gcp-key.json
 
       - name: Terraform Init
         working-directory: infra/staging
