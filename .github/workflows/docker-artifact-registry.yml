@@ -42,13 +42,8 @@ jobs:
             -backend-config="bucket=outreach-terraform-state" \
             -backend-config="prefix=cloud-run-demo"
 
-      - name: Debug GCP key file
-        run: cat gcp-key.json
-
       - name: Terraform Apply
         working-directory: infra/staging
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-key.json
         run: |
           terraform apply -auto-approve \
             -var="gcp_credentials_file=${{ github.workspace }}/gcp-key.json" \
