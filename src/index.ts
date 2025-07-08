@@ -1,12 +1,12 @@
 import express, { Request, Response } from 'express'
+import routes from './routes/index'
 
 const app = express()
-const port = process.env.PORT || 3000
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hello from TypeScript microservice v1.1.3!' })
+  res.json({ message: 'Hello from TypeScript microservice v1.2.3!' })
 })
 
-app.listen(port, () => {
-  console.log(`Microservice running on port ${port}`)
-})
+app.use(routes);
+
+export default app
