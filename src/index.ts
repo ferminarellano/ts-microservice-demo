@@ -4,7 +4,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hello from TypeScript microservice v1.0.2!' })
+  res.json({ message: 'Hello from TypeScript microservice v1.0.3!' })
 })
 
 app.listen(port, () => {
