@@ -13,6 +13,11 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v3
 
+      - name: Set image tag
+        run: |
+          echo "IMAGE_TAG=outreach:${{ github.sha }}" >> $GITHUB_ENV
+
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -24,7 +29,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/outreach:latest
+          IMAGE=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/$IMAGE_TAG
           docker build -t $IMAGE .
           docker push $IMAGE
       
@@ -42,9 +47,6 @@ jobs:
             -backend-config="bucket=outreach-terraform-state" \
             -backend-config="prefix=cloud-run-demo"
 
-      - name: Show contents of gcp-key.json
-        run: cat /home/runner/work/ts-microservice-demo/ts-microservice-demo/gcp-key.json
-
       - name: Terraform Apply
         working-directory: infra/staging
         run: |
@@ -52,4 +54,4 @@ jobs:
             -var="gcp_credentials_file=${{ github.workspace }}/gcp-key.json" \
             -var="project_id=jobsity-microservices-demo" \
             -var="region=us-east1" \
-            -var="docker_image=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/outreach:latest"
+            -var="docker_image=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/${{ env.IMAGE_TAG }}"
