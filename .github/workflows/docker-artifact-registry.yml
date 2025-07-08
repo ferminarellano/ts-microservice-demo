@@ -32,7 +32,8 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Write GCP credentials to file
-        run: echo "${{ secrets.GCP_SA_KEY }}" > gcp-key.json
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > gcp-key.json
 
       - name: Terraform Init
         working-directory: infra/staging
