@@ -27,3 +27,27 @@ jobs:
           IMAGE=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/outreach:latest
           docker build -t $IMAGE .
           docker push $IMAGE
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Write GCP credentials to file
+        run: echo "${{ secrets.GCP_SA_KEY }}" > gcp-key.json
+
+      - name: Terraform Init
+        working-directory: infra/staging
+        run: |
+          terraform init \
+            -backend-config="bucket=outreach-terraform-state" \
+            -backend-config="prefix=cloud-run-demo"
+
+      - name: Terraform Apply
+        working-directory: infra/staging
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-key.json
+        run: |
+          terraform apply -auto-approve \
+            -var="gcp_credentials_file=${{ github.workspace }}/gcp-key.json" \
+            -var="project_id=jobsity-microservices-demo" \
+            -var="region=us-east1" \
+            -var="docker_image=us-east1-docker.pkg.dev/jobsity-microservices-demo/my-docker-repo/outreach:latest"
