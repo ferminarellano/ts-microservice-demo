@@ -1,12 +1,8 @@
-import express, { Request, Response } from 'express'
-import routes from './routes/index'
+// DaXtra Parser TypeScript SDK
+export { DaxtraParserClient } from './daxtraClient.js';
+export { buildJwt } from './jwt.js';
+export { HttpClient } from './http.js';
+export * from './types.js';
 
-const app = express()
-
-app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'Hello from TypeScript microservice v1.2.3!' })
-})
-
-app.use(routes);
-
-export default app
+// Re-export for convenience
+export { DaxtraParserClient as default } from './daxtraClient.js';
